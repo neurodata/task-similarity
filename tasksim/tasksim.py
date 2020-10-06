@@ -10,11 +10,12 @@ def task_similarity(datax, dataz, acorn=None):
 	# Initialize and fit transformers
 	transformerx = TreeClassificationTransformer()
 	transformerx.fit(*datax)
-	transformed_datax_x = transformerx.transform(datax)
+	transformed_datax_x = transformerx.transform(datax[0])
 
 	transformerz = TreeClassificationTransformer()
 	transformerz.fit(*dataz)
-	transformed_datax_z = transformerz.transform(dataz)
+	transformed_datax_z = transformerx.transform(dataz[0])
+
 
 	# Initialize and fit voters
 	voterx = TreeClassificationVoter()
