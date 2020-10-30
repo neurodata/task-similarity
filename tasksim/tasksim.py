@@ -3,16 +3,19 @@ import numpy as np
 from proglearn.transformers import TreeClassificationTransformer
 from proglearn.voters import TreeClassificationVoter
 
-def task_similarity(datax, dataz, acorn=None):
+def task_similarity(datax, dataz, 
+	transformer_kwargsx={},
+	transformer_kwargsz={},
+	acorn=None):
 	if acorn is not None:
 		np.random.seed(acorn)
 
 	# Initialize and fit transformers
-	transformerx = TreeClassificationTransformer()
+	transformerx = TreeClassificationTransformer(transformer_kwargsx)
 	transformerx.fit(*datax)
 	transformed_datax_x = transformerx.transform(datax[0])
 
-	transformerz = TreeClassificationTransformer()
+	transformerz = TreeClassificationTransformer(transformer_kwargsz)
 	transformerz.fit(*dataz)
 	transformed_datax_z = transformerz.transform(datax[0])
 
