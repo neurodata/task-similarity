@@ -1,5 +1,5 @@
 import numpy as np
-from tasksim import task_similarity
+from .tasksim import task_similarity
 
 from graspy.embed import AdjacencySpectralEmbed as ASE
 from graspy.cluster import AutoGMMCluster as GMM
