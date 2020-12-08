@@ -12,18 +12,19 @@ def _generate_function_tuples(classes, metric_kwargs={'n_neg_classes':5}, acorn=
         np.random.seed(acorn)
        
     function_tuples = []
-    for j, class1 in enumerate(classes[:n_used_classes]):
+    for j, class1 in enumerate(classes):
         class1_idx = np.where(classes == class1)[0][0]
-        for k, class2 in enumerate(classes[:n_used_classes]):
+        for k, class2 in enumerate(classes):
             if j == k:
                 continue
 
-            class2_idx = np.where(classes[:n_used_classes] == class2)[0][0]
+            class2_idx = np.where(classes == class2)[0][0]
     
             if metric_kwargs is not None:
                 if 'n_neg_classes' in list(metric_kwargs.keys()):
-                    for _ in range(n_neg_classes):      
-                        neg_class_idx = np.random.choice(classes[:n_used_classes], size=1)[0]
+                    for _ in range(n_neg_classes):
+                        
+                        neg_class_idx = np.random.choice(np.delete(classes, [j,k]) size=1)[0]
                         function_tuples.append((class1_idx, class2_idx, neg_class_idx))
             else:
                 function_tuples.append(class1_idx, class2_idx)
