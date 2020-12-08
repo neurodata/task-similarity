@@ -44,7 +44,7 @@ def _array_to_matrix(a, n_classes, n_iterations_per_pair_of_classes):
                 
             temp_index = j*n_classes + k - np.sum(np.arange(1, j+2))
             temp_indices = np.arange(n_iterations_per_pair_of_classes * temp_index, 
-                                    (n_iterations_per_pair_of_classes + 1) * temp_index)
+                                    n_iterations_per_pair_of_classes * (temp_index+1))
             
             matrix[j,k] = np.mean(a[temp_indices])
             
