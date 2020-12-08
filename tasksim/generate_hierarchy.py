@@ -69,11 +69,14 @@ def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes':
     idx_by_class = [np.where(y == c)[0] for c in classes]
         
     if metric == 'tasksim':
+        directed=False
         if function_tuples is None:
             function_tuples = _generate_function_tuples(classes, metric_kwargs=metric_kwargs)
         
         condensed_func = lambda x: task_sim_neg(X[idx_by_class[x[0]]], X[idx_by_class[x[1]]], X[idx_by_class[x[2]]])
-        n_iterations_per_pair_of_classes = len(classes)**2 - len(classes) 
+        
+    if directed:
+        n_iterations_per_class = int(len(function_tuples) / (len(classes)**2 - len(classes)))
     
     distances = np.array(Parallel(n_jobs=n_cores)(delayed(condensed_func)(tuple_) for tuple_ in function_tuples))
     dist_matrix = _array_to_matrix(distances, len(classes), n_iterations_per_pair_of_classes)
