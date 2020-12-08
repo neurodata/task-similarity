@@ -24,7 +24,7 @@ def _generate_function_tuples(classes, metric_kwargs={'n_neg_classes':5}, acorn=
                 if 'n_neg_classes' in list(metric_kwargs.keys()):
                     for _ in range(n_neg_classes):
                         
-                        neg_class_idx = np.random.choice(np.delete(classes, [j,k]) size=1)[0]
+                        neg_class_idx = np.random.choice(np.delete(classes, [j,k]), size=1)[0]
                         function_tuples.append((class1_idx, class2_idx, neg_class_idx))
             else:
                 function_tuples.append(class1_idx, class2_idx)
