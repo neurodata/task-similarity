@@ -72,7 +72,7 @@ def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes':
     idx_by_class = [np.where(y == c)[0] for c in classes]
         
     if metric == 'tasksim':
-        directed=False
+        directed=True
         if function_tuples is None:
             function_tuples = _generate_function_tuples(classes, metric_kwargs=metric_kwargs)
         
