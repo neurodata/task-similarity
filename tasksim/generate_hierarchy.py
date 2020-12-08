@@ -22,6 +22,7 @@ def _generate_function_tuples(classes, metric_kwargs={'n_neg_classes':5}, acorn=
     
             if metric_kwargs is not None:
                 if 'n_neg_classes' in list(metric_kwargs.keys()):
+                    n_neg_classes = metric_kwargs['n_neg_classes']
                     for _ in range(n_neg_classes):
                         
                         neg_class_idx = np.random.choice(np.delete(classes, [j,k]), size=1)[0]
