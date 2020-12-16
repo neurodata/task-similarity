@@ -21,10 +21,11 @@ def task_similarity(datax, dataz,
 
 
 	# Initialize and fit voters
-	voterx = TreeClassificationVoter()
+	classesx = np.unique(datax[1])
+	voterx = TreeClassificationVoter(classes=classesx)
 	voterx.fit(transformed_datax_x, datax[1])
 
-	voterz = TreeClassificationVoter()
+	voterz = TreeClassificationVoter(classes=classesx)
 	voterz.fit(transformed_datax_z, datax[1])
 
 	# Get predictions
