@@ -156,7 +156,7 @@ def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes':
     return dist_matrix
 
 
-def preprocess_dist_matrix(dist_matrix, make_symmetric=False, scale=False, aug_diag=False):
+def preprocess_dist_matrix(dist_matrix, make_symmetric=False, scale=False, aug_diag=False, negate=False):
     if make_symmetric:
         dist_matrix = 0.5*(dist_matrix + dist_matrix.T)
         
@@ -168,6 +168,9 @@ def preprocess_dist_matrix(dist_matrix, make_symmetric=False, scale=False, aug_d
         
     if scale:
         dist_matrix = (dist_matrix - np.min(dist_matrix)) / (np.max(dist_matrix) - np.min(dist_matrix))
+                                     
+    if negate:
+        dist_matrix = 1 - dist_matrix
         
     return dist_matrix
 
