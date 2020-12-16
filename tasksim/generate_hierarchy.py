@@ -121,7 +121,7 @@ def mmd_rbf(X, Y, gamma=1.0):
     YY = rbf_kernel(Y, Y, gamma) - np.eye(m)
     XY = rbf_kernel(X, Y, gamma)
     
-    return XX.sum() / (n * (n-1)) + (YY.sum() / (m * (m-1)) - 2 * XY.mean()
+    return (XX.sum() / (n * (n-1))) + (YY.sum() / (m * (m-1))) - (2 * XY.mean())
 
 
 def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes': 5}, function_tuples=None, n_cores=1, acorn=None):
