@@ -51,7 +51,7 @@ def _array_to_matrix(a, n_classes, n_iterations_per_pair_of_classes):
     return matrix
 
 
-def task_sim_neg(class1, class2, negclass):
+def task_sim_neg(class1, class2, negclass, task_similarity_kwargs={}):
     n1, d = class1.shape
     n2, p = class2.shape
     n3, q = negclass.shape
@@ -59,7 +59,7 @@ def task_sim_neg(class1, class2, negclass):
     data1 = (np.concatenate([class1, negclass]), np.concatenate([np.zeros(n1), np.ones(n3)]))
     data2 = (np.concatenate([class2, negclass]), np.concatenate([np.zeros(n2), np.ones(n3)]))
     
-    ts = task_similarity(data1, data2)
+    ts = task_similarity(data1, data2, **task_similarity_kwargs)
     
     return ts
 
