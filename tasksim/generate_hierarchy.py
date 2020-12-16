@@ -27,6 +27,8 @@ def _generate_function_tuples(classes, metric_kwargs={'n_neg_classes':5}, acorn=
                         
                         neg_class_idx = np.random.choice(np.delete(classes, [j,k]), size=1)[0]
                         function_tuples.append((class1_idx, class2_idx, neg_class_idx))
+                if 'gamma' in list(metric_kwargs.keyes()):
+                    function_tuples.append(class1_idx, class2_idx, gamma)
             else:
                 function_tuples.append(class1_idx, class2_idx)
     
@@ -63,6 +65,24 @@ def task_sim_neg(class1, class2, negclass, task_similarity_kwargs={}):
     
     return ts
 
+def mmd_rbf(X, Y, gamma=1.0):
+    """MMD using rbf (gaussian) kernel (i.e., k(x,y) = exp(-gamma * ||x-y||^2 / 2))
+    Arguments:
+        X {[n_sample1, dim]} -- [X matrix]
+        Y {[n_sample2, dim]} -- [Y matrix]
+    Keyword Arguments:
+        gamma {float} -- [kernel parameter] (default: {1.0})
+    Returns:
+        [scalar] -- [MMD value]
+        
+    from https://github.com/jindongwang/transferlearning/blob/master/code/distance/mmd_numpy_sklearn.py
+    """
+    XX = metrics.pairwise.rbf_kernel(X, X, gamma)
+    YY = metrics.pairwise.rbf_kernel(Y, Y, gamma)
+    XY = metrics.pairwise.rbf_kernel(X, Y, gamma)
+    
+    return XX.mean() + YY.mean() - 2 * XY.mean()
+
 
 def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes': 5}, function_tuples=None, n_cores=1, acorn=None):
     if acorn is not None:
@@ -78,8 +98,15 @@ def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes':
         
         condensed_func = lambda x: task_sim_neg(X[idx_by_class[x[0]]], X[idx_by_class[x[1]]], X[idx_by_class[x[2]]])
         
+    elif metric == 'mmd':
+        directed=False
+        if function_tuples is None:
+            function_tuples = _generate_function_tuples(classes, metric_kwargs)
+        
     if directed:
         n_iterations_per_pair_of_classes = int(len(function_tuples) / (len(classes)**2 - len(classes)))
+    else:
+        n_iterations_per_pair_of_classes = int(len(function_tuples) / (len(classes)**2))
     
     distances = np.array(Parallel(n_jobs=n_cores)(delayed(condensed_func)(tuple_) for tuple_ in function_tuples))
     dist_matrix = _array_to_matrix(distances, len(classes), n_iterations_per_pair_of_classes)
