@@ -118,9 +118,9 @@ def mmd_rbf(X, Y, gamma='median'):
     m, _ = Y.shape
     
     if gamma == 'median':
-        gammax = np.median(np.sort(pairwise_distances(X).reshape(n**2,))[n:])
-        gammay = np.median(np.sort(pairwise_distances(Y).reshape(n**2,))[n:])
-        gammaxy = np.median(np.sort(pairwise_distances(X,Y).reshape(n*m,)))
+        gammax = 1 / np.median(np.sort(pairwise_distances(X).reshape(n**2,))[n:])
+        gammay = 1 / np.median(np.sort(pairwise_distances(Y).reshape(n**2,))[n:])
+        gammaxy = 1 / np.median(np.sort(pairwise_distances(X,Y).reshape(n*m,)))
     else:
         gammax, gammay, gammaxy = gamma, gamma, gamma
         
