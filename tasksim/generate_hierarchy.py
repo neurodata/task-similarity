@@ -6,11 +6,11 @@ from graspy.cluster import AutoGMMCluster as GMM
 
 from joblib import Parallel, delayed
 
-
 from graspy.embed import AdjacencySpectralEmbed as ASE
 from graspy.cluster import AutoGMMCluster as GMM
 
 from sklearn.metrics.pairwise import rbf_kernel
+from sklearn.metrics import pairwise_distances
 
 def _generate_function_tuples(classes, metric_kwargs={'n_neg_classes':5}, directed=True, acorn=None):
     if acorn is not None:
@@ -118,8 +118,8 @@ def mmd_rbf(X, Y, gamma='median'):
     m, _ = Y.shape
     
     if gamma == 'median':
-        gammax = np.median(np.sort(sklearn.metrics.pairwise_distances(X).reshape(n**2,))[n:])
-        gammay = np.median(np.sort(sklearn.metrics.pairwise_distances(Y).reshape(n**2,))[n:])
+        gammax = np.median(np.sort(pairwise_distances(X).reshape(n**2,))[n:])
+        gammay = np.median(np.sort(pairwise_distances(Y).reshape(n**2,))[n:])
         gammaxy = np.median(np.sort((X - Y.T).reshape(n*m,)))
     else:
         gammax, gammay, gammaxy = gamma, gamma, gamma
