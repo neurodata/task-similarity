@@ -102,7 +102,7 @@ def task_sim_neg(class1, class2, negclass, task_similarity_kwargs={}):
     
     return ts
 
-def mmd_rbf(X, Y, gamma=1.0):
+def mmd_rbf(X, Y, gamma='median'):
     """MMD using rbf (gaussian) kernel (i.e., k(x,y) = exp(-gamma * ||x-y||^2 / 2))
     Arguments:
         X {[n_sample1, dim]} -- [X matrix]
@@ -117,9 +117,16 @@ def mmd_rbf(X, Y, gamma=1.0):
     n, d = X.shape
     m, _ = Y.shape
     
-    XX = rbf_kernel(X, X, gamma) - np.eye(n)
-    YY = rbf_kernel(Y, Y, gamma) - np.eye(m)
-    XY = rbf_kernel(X, Y, gamma)
+    if gamma == 'median':
+        gammax = np.median(np.sort(sklearn.metrics.pairwise_distances(X).reshape(n**2,))[n:])
+        gammay = np.median(np.sort(sklearn.metrics.pairwise_distances(Y).reshape(n**2,))[n:])
+        gammaxy = np.median(np.sort((X - Y.T).reshape(n*m,)))
+    else:
+        gammax, gammay, gammaxy = gamma, gamma, gamma
+        
+    XX = rbf_kernel(X, X, gammax) - np.eye(n)
+    YY = rbf_kernel(Y, Y, gammay) - np.eye(m)
+    XY = rbf_kernel(X, Y, gammaxy)
     
     return (XX.sum() / (n * (n-1))) + (YY.sum() / (m * (m-1))) - (2 * XY.mean())
 
