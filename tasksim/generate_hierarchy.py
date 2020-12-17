@@ -120,7 +120,7 @@ def mmd_rbf(X, Y, gamma='median'):
     if gamma == 'median':
         gammax = np.median(np.sort(pairwise_distances(X).reshape(n**2,))[n:])
         gammay = np.median(np.sort(pairwise_distances(Y).reshape(n**2,))[n:])
-        gammaxy = np.median(np.sort((X - Y.T).reshape(n*m,)))
+        gammaxy = np.median(np.sort(pairwise_distances(X,Y).reshape(n*m,)))
     else:
         gammax, gammay, gammaxy = gamma, gamma, gamma
         
