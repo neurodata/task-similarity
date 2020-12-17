@@ -167,6 +167,9 @@ def preprocess_dist_matrix(dist_matrix, make_symmetric=False, scale=False, aug_d
     if make_symmetric:
         dist_matrix = 0.5*(dist_matrix + dist_matrix.T)
         
+    if negate:
+        dist_matrix = 1 - dist_matrix
+        
     if aug_diag:
         n, _ = dist_matrix.shape
         
@@ -175,10 +178,7 @@ def preprocess_dist_matrix(dist_matrix, make_symmetric=False, scale=False, aug_d
         
     if scale:
         dist_matrix = (dist_matrix - np.min(dist_matrix)) / (np.max(dist_matrix) - np.min(dist_matrix))
-                                     
-    if negate:
-        dist_matrix = 1 - dist_matrix
-        
+                                    
     return dist_matrix
 
 
