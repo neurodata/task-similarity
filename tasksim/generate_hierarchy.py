@@ -22,9 +22,7 @@ def _generate_function_tuples(classes, metric_kwargs={'n_neg_classes':5}, direct
         for j, class1 in enumerate(classes):
             class1_idx = np.where(classes == class1)[0][0]
             for k, class2 in enumerate(classes):
-                if j == k:
-                    continue
-
+                
                 class2_idx = np.where(classes == class2)[0][0]
 
                 if metric_kwargs is not None:
@@ -71,7 +69,7 @@ def _array_to_matrix(a, n_classes, n_iterations_per_pair_of_classes, directed):
                     matrix[j,k] = 0
                     continue
 
-                temp_index = j*n_classes + k - np.sum(np.arange(1, j+2))
+                temp_index = j*n_classes + k
                 temp_indices = np.arange(n_iterations_per_pair_of_classes * temp_index, 
                                         n_iterations_per_pair_of_classes * (temp_index+1))
 
@@ -84,7 +82,7 @@ def _array_to_matrix(a, n_classes, n_iterations_per_pair_of_classes, directed):
                     continue
                     
                 if n_iterations_per_pair_of_classes == 1:
-                    matrix[j,k] = a[j*n_classes + k - int(np.sum(range(j+2)))]
+                    matrix[j,k] = a[j*n_classes + k]
                     matrix[k,j] = matrix[j,k]
                     
     return matrix
@@ -118,9 +116,9 @@ def mmd_rbf(X, Y, gamma='median'):
     m, _ = Y.shape
     
     if gamma == 'median':
-        gammax = 1 / np.median(np.sort(pairwise_distances(X).reshape(n**2,))[n:])
-        gammay = 1 / np.median(np.sort(pairwise_distances(Y).reshape(n**2,))[n:])
-        gammaxy = 1 / np.median(np.sort(pairwise_distances(X,Y).reshape(n*m,)))
+        gammax = np.median(np.sort(pairwise_distances(X).reshape(n**2,))[n:])
+        gammay = np.median(np.sort(pairwise_distances(Y).reshape(n**2,))[n:])
+        gammaxy = np.median(np.sort(pairwise_distances(X,Y).reshape(n*m,)))
     else:
         gammax, gammay, gammaxy = gamma, gamma, gamma
         
@@ -146,22 +144,22 @@ def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes':
         condensed_func = lambda x: task_sim_neg(X[idx_by_class[x[0]]], X[idx_by_class[x[1]]], X[idx_by_class[x[2]]])
         
     elif metric == 'mmd':
-        directed=False
+        directed=True
         if function_tuples is None:
             function_tuples = _generate_function_tuples(classes, metric_kwargs, directed)
             
         condensed_func = lambda x: mmd_rbf(X[idx_by_class[x[0]]], X[idx_by_class[x[1]]], x[2])
         
     if directed:
-        n_iterations_per_pair_of_classes = int(len(function_tuples) / (len(classes)**2 - len(classes)))
+        n_iterations_per_pair_of_classes = int(len(function_tuples) / (len(classes)**2))
     else:
+        # This is broken
         n_iterations_per_pair_of_classes = int(len(function_tuples) / ((len(classes)**2 - len(classes)) / 2))
     
     distances = np.array(Parallel(n_jobs=n_cores)(delayed(condensed_func)(tuple_) for tuple_ in function_tuples))
     dist_matrix = _array_to_matrix(distances, len(classes), n_iterations_per_pair_of_classes, directed)
     
     return dist_matrix
-
 
 def preprocess_dist_matrix(dist_matrix, make_symmetric=False, scale=False, aug_diag=False, negate=False):
     if make_symmetric:
