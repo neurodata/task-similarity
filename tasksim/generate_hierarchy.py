@@ -134,7 +134,7 @@ def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes':
         np.random.seed(acorn)
         
     classes = np.unique(y)
-    idx_by_class = [np.where(y == c)[0] for c in classes]
+    idx_by_class = [np.where(y == c)[0].astype(int) for c in classes]
         
     if metric == 'tasksim':
         directed=True
