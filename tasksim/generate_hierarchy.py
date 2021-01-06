@@ -141,7 +141,7 @@ def generate_dist_matrix(X, y, metric='tasksim', metric_kwargs={'n_neg_classes':
         if function_tuples is None:
             function_tuples = _generate_function_tuples(classes, metric_kwargs, directed)
         
-        condensed_func = lambda x: task_sim_neg(X[idx_by_class[x[0]]], X[idx_by_class[x[1]]], X[idx_by_class[x[2]]])
+        condensed_func = lambda x: task_sim_neg(X[idx_by_class[int(x[0]])], X[idx_by_class[int(x[1]])], X[idx_by_class[int(x[2]])])
         
     elif metric == 'mmd':
         directed=True
