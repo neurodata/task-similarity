@@ -6,9 +6,22 @@ from proglearn.voters import TreeClassificationVoter
 def task_similarity(datax, dataz, 
 	transformer_kwargsx={},
 	transformer_kwargsz={},
+	balance=False,
 	acorn=None):
 	if acorn is not None:
 		np.random.seed(acorn)
+		
+	n, d = datax[0].shape
+	m, p = datay[0].shape
+	
+	if balance:
+	    min_nm = np.min([n, m])
+	    x_inds = np.random.choice(np.arange(n), size=min_nm, replace=False)
+	    y_inds = np.random.choice(np.arange(m), size=min_nm, replace=False)
+	
+	    datax = (datax[0][x_inds], datax[1][x_inds])
+	    datay = (datay[0][y_inds], datay[1][y_inds])
+		
 
 	# Initialize and fit transformers
 	transformerx = TreeClassificationTransformer(transformer_kwargsx)
