@@ -12,7 +12,7 @@ def task_similarity(datax, dataz,
 		np.random.seed(acorn)
 		
 	n, d = datax[0].shape
-	m, p = datay[0].shape
+	m, p = dataz[0].shape
 	
 	if balance:
 	    min_nm = np.min([n, m])
