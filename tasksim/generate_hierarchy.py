@@ -93,6 +93,22 @@ def task_sim_neg(class1, class2, negclass, task_similarity_kwargs={}):
     n2, p = class2.shape
     n3, q = negclass.shape
     
+    if 'balance' in list(task_similarity_kwargs.keys()):
+        balance=task_similarity_kwargs['balance']
+        
+        if balance:
+            min_n = np.min([n1,n2,n3])
+            
+            x1_inds = np.random.choice(np.arange(n1), size=min_n, replace=False)
+            x2_inds = np.random.choice(np.arange(n2), size=min_n, replace=False)
+            x3_inds = np.random.choice(np.arange(n3), size=min_n, replace=False)
+            
+            class1 = class1[x1_inds]
+            class2 = class2[x2_inds]
+            negclass = class3[x3_inds]
+            
+            n1, n2, n3 = min_n, min_n, min_n
+    
     data1 = (np.concatenate([class1, negclass]), np.concatenate([np.zeros(n1), np.ones(n3)]))
     data2 = (np.concatenate([class2, negclass]), np.concatenate([np.zeros(n2), np.ones(n3)]))
     
