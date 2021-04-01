@@ -1,14 +1,12 @@
 import numpy as np
 from .tasksim import task_similarity
 
-from graspy.embed import AdjacencySpectralEmbed as ASE
-from graspy.cluster import AutoGMMCluster as GMM
-
+from graspologic.embed import AdjacencySpectralEmbed as ASE
+from graspologic.cluster import AutoGMMCluster as GMM
 from joblib import Parallel, delayed
 
-from graspy.embed import AdjacencySpectralEmbed as ASE
-from graspy.cluster import AutoGMMCluster as GMM
-
+from graspologic.embed import AdjacencySpectralEmbed as ASE
+from graspologic.cluster import AutoGMMCluster as GMM
 from sklearn.metrics.pairwise import rbf_kernel
 from sklearn.metrics import pairwise_distances
 
