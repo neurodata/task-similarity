@@ -23,6 +23,7 @@ setup(
 #        "Programming Language :: Python :: 3.6",
 #        "Programming Language :: Python :: 3.7"
     ],
+    packages = ["tasksim"],
     install_requires=requirements,
 #    packages=find_packages(exclude=["tests", "tests.*", "tests/*"]),
 #    include_package_data=True
