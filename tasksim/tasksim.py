@@ -4,8 +4,8 @@ from proglearn.transformers import TreeClassificationTransformer
 from proglearn.voters import TreeClassificationVoter
 
 def task_similarity(datax, dataz, 
-	transformer_kwargsx={},
-	transformer_kwargsz={},
+	transformer_kwargsx={'max_depth':6},
+	transformer_kwargsz={'max_depth':6},
 	balance=False,
 	acorn=None):
 	if acorn is not None:
